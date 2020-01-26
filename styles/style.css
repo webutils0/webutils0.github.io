@@ -14,15 +14,27 @@ header {
 h1 {
   margin: 0px;
 }
+h2{
+  margin: 0;
+}
 
 nav {
   background-color: orange;
 }
 
 main {
-  background-color: yellow;
+  background-color: rgb(176,224,230);
+  margin: 0;
 }
 
 footer {
   background-color: aqua;
+}
+
+#centerTitle{
+  text-align: center;
+}
+#presentationText{
+  text-align: justify;
+  font-size: 18px;
 }
