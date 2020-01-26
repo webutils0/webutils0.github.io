@@ -1,11 +1,19 @@
-import { get, chunkString } from './utils.js'
+import {
+  get,
+  chunkString
+} from './utils.js'
 
 /**
  * Convert number to base with given options
  * 
- * @param {Number} number -  
- * @param {Number} base 
- * @param {Object} options 
+ * @param {Number} number - Number to convert
+ * @param {Number} base - Desired output base
+ * @param {Object} options - Options to apply
+ * @param {Number} [options.padding = 8] - Padding to apply to the number 
+ * @param {Number} [options.size = 0] - Size to chunk the output string
+ * @param {Number} [options.separator = ' '] - Character to separate the chunks with
+ * 
+ * @returns {string} - String representing the number in the given base
  */
 function convert(number, base, options) {
   const padding = get(options, 'padding', 8),
@@ -13,14 +21,15 @@ function convert(number, base, options) {
     separator = get(options, 'separator', ' ');
   if (isNaN(padding)) throw "Padding value is not a number!";
   if (isNaN(size)) throw "Chunk size is not a number!";
-  
+
   let result = number.toString(base).padStart(padding, '0');
-  if (size === 0 || size >= result.length) return result;
-  return chunkString(result, size, separator);
+  if (size !== 0 || size < result.length) result = chunkString(result, size, true, separator);
+  if (base === 16) result = '0x' + result;
+  return result;
 }
 
 console.log(convert(12, 2, {
-  padding: 16,
+  padding: 5,
   size: 4,
   separator: '-'
 }))
