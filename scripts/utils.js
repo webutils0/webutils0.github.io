@@ -14,13 +14,12 @@ function get(object, key, default_value) {
 }
 
 /**
- * Chunk the element into pieces of given size and join the pieces
- * with the given separator
+ * Chunk the element into pieces of given size
  * 
  * @param {Array.<*> | string} elem - Array or string to split
  * @param {Number} size - Size of chunks
  * 
- * @returns {string} - Element chunked with separator and rejoined
+ * @returns {string} - Element chunked with separator
  */
 function chunk(elem, size) {
   let res = [];
@@ -31,22 +30,20 @@ function chunk(elem, size) {
 }
 
 /**
- * Chunk the string into pieces of given size and join the pieces
- * with the given separator
+ * Chunk the string into pieces of given size
  * 
  * @param {string} s - String to split
  * @param {Number} size - Size of chunks
- * @param {boolean} reverse - Decide if largest chunk should be left- or rightmost chunk
- * @param {string} separator - Character used to join the chunks
+ * @param {boolean} reverse - Decide order of chunks
  * 
- * @returns {string} - String chunked with separator and rejoined
+ * @returns {string} - String chunked
  */
-function chunkString(s, size, reverse = false, separator = ' ') {
+function chunkString(s, size, reverse = false) {
   if (typeof size === "undefined") return s;
   if (reverse) s = s.split('').reverse().join('');
   let res = chunk(s, size);
   if (reverse) res = res.map(x => x.split('').reverse().join('')).reverse();
-  return res.join(separator);
+  return res;
 }
 
 /**
@@ -57,7 +54,7 @@ function chunkString(s, size, reverse = false, separator = ' ') {
  * 
  * @returns {Number} - Random number between bounds
  */
-function getRandomInt(min, max) {
+function randInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min)) + min;
@@ -66,5 +63,6 @@ function getRandomInt(min, max) {
 export {
   get,
   chunkString,
-  chunk
+  chunk,
+  randInt
 };

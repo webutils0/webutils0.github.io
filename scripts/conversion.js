@@ -23,13 +23,13 @@ function convert(number, base, options) {
   if (isNaN(size)) throw "Chunk size is not a number!";
 
   let result = number.toString(base).padStart(padding, '0');
-  if (size !== 0 || size < result.length) result = chunkString(result, size, true, separator);
+  if(size !== 0 && size < result.length) result = chunkString(result, size, true).join(separator);
   if (base === 16) result = '0x' + result;
   return result;
 }
 
 console.log(convert(12, 2, {
-  padding: 5,
+  padding: 12,
   size: 4,
-  separator: '-'
+  separator: '_'
 }))
