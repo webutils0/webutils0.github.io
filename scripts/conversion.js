@@ -33,3 +33,10 @@ console.log(convert(12, 2, {
   size: 4,
   separator: '_'
 }))
+
+const conversionButton = document.getElementById('conversion-button');
+conversionButton.addEventListener('click', e => {
+  const textAreas = document.getElementsByTagName('textarea');
+  const values = [...textAreas].map(t => t.value);
+  console.log(values);
+});
