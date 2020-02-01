@@ -10,16 +10,30 @@
 
 <body>
   <header>
-    <h1><a href="../index.html" id="mainTitle">Webutils</a></h1>
+    <h1><a href="../index.html" id="site-title">Webutils</a></h1>
     <nav>
       Navbar
     </nav>
   </header>
   <main>
-    <h2 id="centerTitle">Conversion</h2>
-
-
-
+    <h2 id="main-title" class="center">Conversion</h2>
+    <div id="form-container">
+      <div id="textarea-group">
+        <select name="options1" id="options1">
+          <option value="binary" selected>Binary</option>
+          <option value="hexadecimal">Hexadecimal</option>
+        </select>
+        <textarea name="input" id="input" cols="30" rows="10" placeholder="Enter input value here"></textarea>
+      </div>
+      <input type="button" id="conversion-button" class="button" value="Convertir">
+      <div id="textarea-group">
+        <select name="options2" id="options2">
+          <option value="binary">Binary</option>
+          <option value="hexadecimal" selected>Hexadecimal</option>
+        </select>
+        <textarea name="output" id="output" cols="30" rows="10" readonly></textarea>
+      </div>
+    </div>
   </main>
   <footer>Footer</footer>
   <script type="module" src='../scripts/conversion.js'></script>
