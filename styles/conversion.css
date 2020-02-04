@@ -2,7 +2,8 @@
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-  margin-top: 15px;
+  padding: 15px;
+  border: 1px dashed black;
 }
 
 #textarea-group {
@@ -30,8 +31,31 @@
 
 textarea {
   margin-top: 5px;
+  box-shadow: 2px 2px 4px #999;
 }
 
 select {
   font-size: 16px;
+}
+
+#temp-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#temp-form-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#temp-form-container input {
+  margin: 10px;
+}
+
+#checkbox-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }

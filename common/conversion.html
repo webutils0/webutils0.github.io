@@ -34,6 +34,18 @@
         <textarea name="output" id="output" cols="30" rows="10" readonly></textarea>
       </div>
     </div>
+    <div id="temp-container">
+      <h3>TEMPORARY</h3>
+      <div id="temp-form-container">
+        <input id="in" id="" cols="30" rows="5" placeholder="Hex adress"></textarea>
+          <input type="button" value="Convert" id="temp-button">
+        <input id="out" id="" cols="30" rows="5" placeholder="Payload" readonly></textarea>
+      </div>
+    </div>
+    <div id="checkbox-container">
+      <label for="endian">Little-endian</label>
+      <input type="checkbox" id="endian-checkbox" checked>
+    </div>
   </main>
   <footer>Footer</footer>
   <script type="module" src='../scripts/conversion.js'></script>
