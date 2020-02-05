@@ -2,6 +2,9 @@ import {
   get,
   chunkString
 } from './utils.js'
+import {
+  morseTable
+} from './data.js'
 
 /**
  * Convert number to base with given options
@@ -23,7 +26,7 @@ function convert(number, base, options) {
   if (isNaN(size)) throw "Chunk size is not a number!";
 
   let result = number.toString(base).padStart(padding, '0');
-  if(size !== 0 && size < result.length) result = chunkString(result, size, true).join(separator);
+  if (size !== 0 && size < result.length) result = chunkString(result, size, true).join(separator);
   if (base === 16) result = '0x' + result;
   return result;
 }
@@ -45,6 +48,45 @@ function hex2payload(number, le = true) {
   return number.join('');
 }
 
+/**
+ * Decode the given morseString encoded using the characters '.' and '-' and separated using
+ * the given separator (can be none), unknown chars are replaced with '?'
+ * 
+ * @param {string} morseString - String encoded in morse with . and - 
+ * @param {string} separator - Separator used to separate words in morseString
+ * 
+ * @returns {string} - Decoded morse string
+ */
+function decodeMorse(morseString, separator) {
+  let chunks;
+  if (separator) chunks = morseString.split(separator);
+  else chunks = morseString.split(' ');
+  let decoded_chunks = chunks.map(c => c.trim().split(' ').map(l => morseTable[l] || '?').join(''));
+  return decoded_chunks.join(' ');
+}
+
+/**
+ * Encode the given message in morse, separating morse letters with spaces and
+ * words with given separator
+ * 
+ * @param {string} s - String to encode in morse
+ * @param {string} separator - Character used to separate morse words
+ * 
+ * @returns {string} - Morse encoded string
+ */
+function encodeMorse(s, separator = '/') {
+  s = s.toUpperCase();
+  let encoded = s.split(' ').map(c => c.split('').map(l => morseTable[l] || '?').join(' ')).join(separator);
+  return encoded;
+}
+
+//-------------------------------------------------------------------------
+// TODO: Create unit test / regression tests for each function
+
+// console.log(decodeMorse("-... --- -. .--- --- ..- .-. / -.. . -.-. --- -.. . / -- --- ..", "/"))
+// console.log(encodeMorse("Ceci est un message à encoder"));
+// console.log(decodeMorse(encodeMorse("Ceci est un message à encoder"), '/'));
+
 // console.log(convert(12, 2, {
 //   padding: 12,
 //   size: 4,
@@ -52,6 +94,7 @@ function hex2payload(number, le = true) {
 // }))
 
 // console.log(hex2payload('0x8007625a'))
+//-------------------------------------------------------------------------
 
 const conversionButton = document.getElementById('conversion-button');
 conversionButton.addEventListener('click', e => {
