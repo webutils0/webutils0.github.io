@@ -1,12 +1,13 @@
-#form-container {
+.form-container {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
   padding: 15px;
   border: 1px dashed black;
+  margin-bottom: 20px;;
 }
 
-#textarea-group {
+.textarea-group {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -54,8 +55,10 @@ select {
   margin: 10px;
 }
 
-#checkbox-container {
+#endian-container {
   display: flex;
-  flex-direction: row;
+  align-items: center;
   justify-content: center;
+  margin-bottom: 20px;
 }
+
