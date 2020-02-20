@@ -64,5 +64,5 @@ export {
   get,
   chunkString,
   chunk,
-  randInt
+  randInt,
 };
