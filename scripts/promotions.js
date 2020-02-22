@@ -7,7 +7,7 @@ class APIFetcher {
 
   async makeRequest() {
     if (this.cache !== null) return this.cache;
-    const response =  await fetch(this.endpoint, this.options);
+    const response = await fetch(this.endpoint, this.options);
     this.cache = await response.json();
     return this.cache;
   }
@@ -27,7 +27,82 @@ class APIFetcher {
   }
 }
 
-const epicAPI = new APIFetcher("https://graphql.epicgames.com/graphql", {
+class Game {
+  constructor(title, image, price) {
+    this.title = title;
+    this.image = image;
+    this.price = price;
+  }
+}
+
+// TODO: Handle upcoming free games ?
+class EpicAPIFetcher extends APIFetcher {
+  processData() {
+    if (this.cache === null) return;
+    const games = this.cache.data.Catalog.catalogOffers.elements;
+    let freeGames = [],
+      upcomingFreeGames = [];
+    for (const game of games) {
+      const g = new Game(
+        game.title,
+        game.keyImages.filter(i => i.type === "DieselStoreFrontWide")[0].url,
+        0
+      );
+      if (game.promotions.promotionalOffers.length !== 0) {
+        freeGames.push(g);
+      } else {
+        upcomingFreeGames.push(g);
+      }
+    }
+    return freeGames;
+  }
+}
+
+class HumbleAPIFetcher extends APIFetcher {
+  processData() {
+    if (this.cache == null) return;
+    const data = this.cache.results;
+    let freeGames = [];
+    for (const game of data) {
+      const g = new Game(
+        game.human_name,
+        game.standard_carousel_image,
+        game.current_price.amount
+      );
+      if (game.current_price.amount === 0) {
+        freeGames.push(g);
+      }
+    }
+    return freeGames;
+  }
+}
+
+function createCard(game) {
+  let div, p, img, span1, span2;
+  div = document.createElement('div');
+  div.className = "card";
+  titleSpan = document.createElement('span');
+  titleSpan.textContent = game.title;
+  div.appendChild(titleSpan);
+  img = document.createElement('img');
+  img.src = game.image;
+  div.appendChild(img);
+  let test = "Lorem Ipsum Dolor";
+  bottomContainer = document.createElement('div');
+  bottomContainer.className = "test";
+  span1 = document.createElement('span');
+  span1.className = "span1";
+  span2 = document.createElement('span');
+  span2.className = "span2";
+  span1.textContent = test;
+  span2.textContent = game.price.toFixed(2) + '€';
+  bottomContainer.appendChild(span1);
+  bottomContainer.appendChild(span2);
+  div.appendChild(bottomContainer);
+  return div;
+}
+
+const epicAPI = new EpicAPIFetcher("https://graphql.epicgames.com/graphql", {
   method: 'POST',
   body: "{\"query\":\"\\n          query promotionsQuery($namespace: String!, $country: String!, $locale: String!) {\\n            Catalog {\\n              catalogOffers(namespace: $namespace, locale: $locale, params: {category: \\\"freegames\\\", country: $country, sortBy: \\\"effectiveDate\\\", sortDir: \\\"asc\\\"}) {\\n                elements {\\n                  title\\n                  description\\n                  id\\n                  namespace\\n                  categories {\\n                    path\\n                  }\\n                  linkedOfferNs\\n                  linkedOfferId\\n                  keyImages {\\n                    type\\n                    url\\n                  }\\n                  productSlug\\n                  promotions {\\n                    promotionalOffers {\\n                      promotionalOffers {\\n                        startDate\\n                        endDate\\n                        discountSetting {\\n                          discountType\\n                          discountPercentage\\n                        }\\n                      }\\n                    }\\n                    upcomingPromotionalOffers {\\n                      promotionalOffers {\\n                        startDate\\n                        endDate\\n                        discountSetting {\\n                          discountType\\n                          discountPercentage\\n                        }\\n                      }\\n                    }\\n                  }\\n                }\\n              }\\n            }\\n          }\\n        \",\"variables\":{\"namespace\":\"epic\",\"country\":\"FR\",\"locale\":\"en-US\"}}",
   headers: {
@@ -35,12 +110,30 @@ const epicAPI = new APIFetcher("https://graphql.epicgames.com/graphql", {
   }
 }, true);
 
-const humbleAPI = new APIFetcher("https://www.humblebundle.com/store/api/search?sort=discount&filter=onsale&hmb_source=store_navbar&request=1", {
+const humbleAPI = new HumbleAPIFetcher("https://www.humblebundle.com/store/api/search?sort=discount&filter=onsale&hmb_source=store_navbar&request=1", {
   method: 'GET',
   headers: {
     "Content-Type": "application/json"
   }
 }, true);
 
-epicAPI.makeRequest().then(d => console.log(d));
-humbleAPI.makeRequest().then(d => console.log(d));
+const container = document.getElementById('games-container');
+
+epicAPI.makeRequest().then(d => {
+  test = epicAPI.processData();
+  // console.log(d)
+  console.log(test);
+  for (const g of test) {
+    console.log(g);
+    container.appendChild(createCard(g));
+  }
+});
+humbleAPI.makeRequest().then(d => {
+  test = humbleAPI.processData();
+  // console.log(d)
+  console.log(test);
+  for (const g of test) {
+    console.log(g);
+    container.appendChild(createCard(g));
+  }
+});
