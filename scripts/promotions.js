@@ -28,10 +28,11 @@ class APIFetcher {
 }
 
 class Game {
-  constructor(title, image, price) {
+  constructor(title, image, price, url) {
     this.title = title;
     this.image = image;
     this.price = price;
+    this.url = url;
   }
 }
 
@@ -46,7 +47,8 @@ class EpicAPIFetcher extends APIFetcher {
       const g = new Game(
         game.title,
         game.keyImages.filter(i => i.type === "DieselStoreFrontWide")[0].url,
-        0
+        0,
+        `https://www.epicgames.com/store/fr/product/${game.productSlug}`
       );
       if (game.promotions.promotionalOffers.length !== 0) {
         freeGames.push(g);
@@ -67,7 +69,8 @@ class HumbleAPIFetcher extends APIFetcher {
       const g = new Game(
         game.human_name,
         game.standard_carousel_image,
-        game.current_price.amount
+        game.current_price.amount,
+        `https://www.humblebundle.com/store/${game.human_url}`
       );
       if (game.current_price.amount === 0) {
         freeGames.push(g);
@@ -78,16 +81,20 @@ class HumbleAPIFetcher extends APIFetcher {
 }
 
 function createCard(game) {
-  let div, p, img, span1, span2;
+  let div, p, img, span1, span2, a;
   div = document.createElement('div');
   div.className = "card";
   titleSpan = document.createElement('span');
   titleSpan.textContent = game.title;
   div.appendChild(titleSpan);
+  a = document.createElement('a');
+  a.href = game.url;
+  a.target = "_blank";
   img = document.createElement('img');
   img.src = game.image;
-  div.appendChild(img);
-  let test = "Lorem Ipsum Dolor";
+  a.appendChild(img);
+  div.appendChild(a);
+  let test = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
   bottomContainer = document.createElement('div');
   bottomContainer.className = "test";
   span1 = document.createElement('span');
@@ -121,16 +128,17 @@ const container = document.getElementById('games-container');
 
 epicAPI.makeRequest().then(d => {
   test = epicAPI.processData();
-  // console.log(d)
+  console.log(d)
   console.log(test);
   for (const g of test) {
     console.log(g);
     container.appendChild(createCard(g));
   }
 });
+
 humbleAPI.makeRequest().then(d => {
   test = humbleAPI.processData();
-  // console.log(d)
+  console.log(d)
   console.log(test);
   for (const g of test) {
     console.log(g);
